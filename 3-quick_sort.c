@@ -1,69 +1,72 @@
 #include "sort.h"
-/**
- * partition - partitions the array
- * @array: array to take in
- * @start: start of array;
- * @end: end of array
- * @size: full size of array
- * Return: position of pivot
- */
-int partition(int *array, int start, int end, int size)
-{
-	int pivot = array[end];
-	int i = start, j, temp;
 
-	for (j = start; j < end; j++)
+/**
+ * partition - partitions array
+ * @array: array
+ * @low: low
+ * @high: high
+ * @size: size
+ *
+ * Return: index
+ */
+
+int partition(int *array, size_t size, int low, int high)
+{
+	int pivot = array[high];
+	int i = low - 1;
+	int j = 0;
+	int temp = 0;
+
+	for (j = low; j <= high - 1; j++)
 	{
-		if (array[j] <= pivot)
+		if (array[j] < pivot)
 		{
-			if (i != j)
-			{
-				temp = array[i];
-				array[i] = array[j];
-				array[j] = temp;
-				print_array(array, size);
-			}
 			i++;
+			temp = array[j];
+			array[j] = array[i];
+			array[i] = temp;
+			print_array(array, size);
 		}
 	}
-	if (i != end)
-	{
-		temp = array[i];
-		array[i] = array[end];
-		array[end] = temp;
-		print_array(array, size);
-	}
-	printf("return i=%d\n", i);
-	return (i);
-}
-/**
- * quickSort - quick sorts with recursion
- * @array: array to sort through
- * @start: start of array or subarray
- * @end: end of array or subarray
- * @size: size of full array
- */
-void quickSort(int *array, int start, int end, int size)
-{
-	int pivot;
+	temp = array[high];
+	array[high] = array[i + 1];
+	array[i + 1] = temp;
 
-	if (start < end)
+	return (i + 1);
+}
+
+/**
+ * quicksort - quicksort
+ * @array: array
+ * @low: low
+ * @high: high
+ * @size: size
+ *
+ */
+
+void quicksort(int *array, size_t size, int low, int high)
+{
+	int p;
+
+	if (low < high)
 	{
-		pivot = partition(array, start, end, size);
-		printf("first recursive, start [%d] to pivot-1[%d]\n", start, pivot - 1);
-		quickSort(array, start, pivot - 1, size);
-		printf("second recursive, pivot+1 [%d] to end [%d]\n", pivot + 1, end);
-		quickSort(array, pivot + 1, end, size);
+		p = partition(array, size, low, high);
+		quicksort(array, size, low, p - 1);
+		quicksort(array, size, p + 1, high);
 	}
 }
+
+
 /**
- * quick_sort - quick sorts an array
- * @array: array to sort
+ * quick_sort - sorts int array in ascending order using Quick sort algorithm
+ * @array: array
  * @size: size of array
  */
+
 void quick_sort(int *array, size_t size)
 {
-	if (array == NULL || size < 2)
+	if (array == NULL)
 		return;
-	quickSort(array, 0, size - 1, size);
+
+	quicksort(array, size, 0, size - 1);
 }
